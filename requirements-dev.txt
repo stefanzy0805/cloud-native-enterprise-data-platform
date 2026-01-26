@@ -1,2 +1,12 @@
+# Testing
 pytest
+pytest-cov
+
+# Linting & Formatting
 ruff
+
+# Type checking
+mypy
+
+# Security
+bandit

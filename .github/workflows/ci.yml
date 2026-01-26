@@ -3,42 +3,124 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ "main" ]
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.10"
+  TERRAFORM_VERSION: "1.5.0"
 
 jobs:
-  ci:
+  # ============================================
+  # Python 代码质量 & 测试
+  # ============================================
+  python:
+    name: Python CI
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ---------- Python ----------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
-      - name: Python lint (ruff)
-        run: |
-          ruff .
+      - name: Lint (ruff)
+        run: ruff check .
 
-      - name: Run tests
-        run: |
-          pytest -q
+      - name: Format check (ruff)
+        run: ruff format --check .
 
-      # ---------- Terraform ----------
+      - name: Type check (mypy)
+        run: mypy ingestion/ --ignore-missing-imports
+        continue-on-error: true  # 暂时不阻塞，等你加完 type hints
+
+      - name: Security scan (bandit)
+        run: bandit -r ingestion/ -ll
+        continue-on-error: true
+
+      - name: Unit tests
+        run: pytest tests/ -v --tb=short
+
+  # ============================================
+  # Terraform 验证 & Plan
+  # ============================================
+  terraform:
+    name: Terraform CI
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: infrastructure/terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      - name: Terraform fmt & validate
-        working-directory: infrastructure/terraform
-        run: |
-          terraform fmt -check
-          terraform init -backend=false
-          terraform validate
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform init -backend=false
+
+      - name: Terraform validate
+        run: terraform validate
+
+      # PR 时显示 plan（需要配置 GCP credentials）
+      # - name: Terraform plan
+      #   if: github.event_name == 'pull_request'
+      #   run: terraform plan -no-color
+      #   env:
+      #     GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+
+  # ============================================
+  # Docker 构建验证
+  # ============================================
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    if: hashFiles('Dockerfile') != ''  # 只在有 Dockerfile 时运行
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: data-platform:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ============================================
+  # 数据质量测试 (未来启用)
+  # ============================================
+  # data-quality:
+  #   name: Data Quality Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Run Great Expectations
+  #       run: great_expectations checkpoint run my_checkpoint
+  #
+  #     - name: Run dbt tests
+  #       run: |
+  #         dbt deps
+  #         dbt test --profiles-dir .

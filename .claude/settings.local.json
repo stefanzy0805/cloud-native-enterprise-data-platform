@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ruff:*)",
+      "Bash(pytest:*)",
+      "Bash(terraform fmt:*)",
+      "Bash(terraform init:*)",
+      "Bash(terraform validate:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(ci\\): enhance CI workflow with parallel jobs, type check, and security scan\n\n- Split into parallel jobs: python, terraform, docker\n- Add mypy type checking \\(non-blocking\\)\n- Add bandit security scanning \\(non-blocking\\)\n- Add ruff format check\n- Add pip caching for faster builds\n- Pin Terraform version\n- Add Docker build job \\(runs when Dockerfile exists\\)\n- Remove intentional lint violation \\(bad_code.py\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(git push)"
+    ]
+  }
+}

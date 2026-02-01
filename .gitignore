@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 .env
+docker/.env
 .venv/
 venv/
 
@@ -28,3 +29,23 @@ terraform.tfvars
 # OS
 .DS_Store
 Thumbs.db
+
+# Docker images and installers
+docker/images/
+*.tar
+*.dmg
+
+# Logs
+*.log
+logs/
+
+# Secrets (additional patterns)
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log

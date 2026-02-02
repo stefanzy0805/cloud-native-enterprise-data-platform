@@ -30,6 +30,9 @@ terraform.tfvars
 .DS_Store
 Thumbs.db
 
+# Claude Code
+.claude/
+
 # Docker images and installers
 docker/images/
 *.tar

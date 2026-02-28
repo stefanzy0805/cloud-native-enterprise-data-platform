@@ -81,13 +81,6 @@ RUN pip install --no-cache-dir \
     jupyter \
     jupyterlab
 
-# Install Node.js (20.x) and Codex CLI
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g codex-cli && \
-    npm cache clean --force && \
-    rm -rf /var/lib/apt/lists/*
-
 # Create non-root user
 ARG USERNAME=vscode
 ARG USER_UID=1000

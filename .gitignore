@@ -30,6 +30,11 @@ terraform.tfvars
 .DS_Store
 Thumbs.db
 
+# Node.js
+node_modules/
+package.json
+package-lock.json
+
 # Claude Code
 .claude/
 

@@ -42,6 +42,7 @@ package-lock.json
 docker/images/
 *.tar
 *.dmg
+*.exe
 
 # Logs
 *.log
@@ -52,6 +53,8 @@ logs/
 *.key
 credentials.json
 secrets.json
+credentials/*
+!credentials/README.md
 
 # Spark
 spark-warehouse/

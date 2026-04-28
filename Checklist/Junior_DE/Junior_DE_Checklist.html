@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Junior DE 面试查漏补缺单</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+  :root{--bg:#0a0e1a;--surface:#111827;--border:#1e293b;--accent1:#00d4ff;--accent2:#7c3aed;--accent3:#10b981;--accent4:#f59e0b;--accent5:#ef4444;--text:#e2e8f0;--muted:#64748b}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;min-height:100vh;padding:40px 20px;background-image:radial-gradient(ellipse at 20% 20%,rgba(124,58,237,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(0,212,255,.06) 0%,transparent 50%)}
+  header{text-align:center;margin-bottom:48px}
+  header h1{font-family:'JetBrains Mono',monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  header p{color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;letter-spacing:2px}
+  .progress-bar{width:300px;height:4px;background:var(--border);border-radius:2px;margin:16px auto 0;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:2px;transition:width .5s ease;width:0%}
+  .progress-text{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:6px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;max-width:1400px;margin:0 auto}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .2s ease,border-color .2s ease}
+  .card:hover{transform:translateY(-2px);border-color:var(--accent2)}
+  .card-header{padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+  .card-icon{font-size:1.4rem;width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .card-title{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;letter-spacing:.5px}
+  .card-count{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+  .card-body{padding:16px 20px}
+  .section-label{font-size:.65rem;font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;margin-top:14px}
+  .section-label:first-child{margin-top:0}
+  .item{display:flex;align-items:flex-start;gap:10px;padding:6px 0;cursor:pointer;border-radius:4px;transition:background .15s;user-select:none}
+  .item:hover{background:rgba(255,255,255,.03);padding-left:4px}
+  .checkbox{width:16px;height:16px;border:1.5px solid var(--muted);border-radius:3px;flex-shrink:0;margin-top:2px;transition:all .15s ease;display:flex;align-items:center;justify-content:center}
+  .item.checked .checkbox{background:var(--accent3);border-color:var(--accent3)}
+  .item.checked .checkbox::after{content:'✓';font-size:10px;color:#000;font-weight:700}
+  .item.checked .item-text{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+  .item-text{font-size:.85rem;line-height:1.4;color:var(--text);transition:color .15s}
+  .tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:.65rem;font-family:'JetBrains Mono',monospace;margin-left:6px;vertical-align:middle}
+  .tag-hot{background:rgba(239,68,68,.2);color:#ef4444}
+  .tag-med{background:rgba(245,158,11,.2);color:#f59e0b}
+  .c1 .card-icon{background:rgba(0,212,255,.1)}.c1 .card-title{color:var(--accent1)}
+  .c2 .card-icon{background:rgba(245,158,11,.1)}.c2 .card-title{color:var(--accent4)}
+  .c3 .card-icon{background:rgba(16,185,129,.1)}.c3 .card-title{color:var(--accent3)}
+  .c4 .card-icon{background:rgba(124,58,237,.1)}.c4 .card-title{color:#a78bfa}
+  .c5 .card-icon{background:rgba(239,68,68,.1)}.c5 .card-title{color:var(--accent5)}
+  .c6 .card-icon{background:rgba(249,115,22,.1)}.c6 .card-title{color:#fb923c}
+  .c7 .card-icon{background:rgba(236,72,153,.1)}.c7 .card-title{color:#f472b6}
+  .reset-btn{display:block;margin:32px auto 0;padding:10px 28px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.8rem;cursor:pointer;transition:all .2s;letter-spacing:1px}
+  .reset-btn:hover{border-color:var(--accent1);color:var(--accent1)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Junior DE · 查漏补缺单</h1>
+  <p>FOUNDATION CHECKLIST FOR DATA ENGINEERING</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0 / 0 completed</div>
+</header>
+<div class="grid" id="grid"></div>
+<button class="reset-btn" onclick="resetAll()">↺ 重置进度</button>
+<script>
+const storageKey='junior_de_checklist';
+const sections=[
+  {id:'roadmap',color:'c1',icon:'🧭',title:'学习路线',groups:[
+    {label:'基础定位',items:[
+      ['能解释 DE 和 DA / SWE / ML Engineer 的区别','hot'],
+      ['理解数据从产生到报表的基本链路','hot'],
+      ['知道 batch、stream、warehouse、lake 的基本含义','med'],
+      ['能画出一个简单 ETL / ELT 流程图','hot'],
+    ]},
+    {label:'最小能力闭环',items:[
+      ['用 SQL 从表里取数、聚合、Join','hot'],
+      ['用 Python 读取文件并做简单清洗','hot'],
+      ['把清洗后的数据写回 CSV / Parquet / 数据库','hot'],
+      ['用 Git 提交一个小项目','med'],
+      ['能读懂报错并定位到代码行','hot'],
+    ]},
+  ]},
+  {id:'sql',color:'c2',icon:'🗃️',title:'SQL',groups:[
+    {label:'查询基础',items:[
+      ['SELECT / WHERE / ORDER BY / LIMIT','hot'],
+      ['CASE WHEN 条件表达式','hot'],
+      ['NULL 语义：IS NULL、COALESCE、三值逻辑','hot'],
+      ['日期函数：DATE_TRUNC、DATE_ADD、EXTRACT','med'],
+      ['字符串函数：LOWER、TRIM、SUBSTR、CONCAT',''],
+    ]},
+    {label:'聚合与 Join',items:[
+      ['GROUP BY 与聚合函数 COUNT / SUM / AVG','hot'],
+      ['HAVING vs WHERE 的区别','hot'],
+      ['INNER JOIN / LEFT JOIN 的结果差异','hot'],
+      ['一对多 Join 后行数变多的原因','hot'],
+      ['UNION vs UNION ALL','med'],
+    ]},
+    {label:'初级窗口函数',items:[
+      ['ROW_NUMBER 取每组最新一条','hot'],
+      ['RANK / DENSE_RANK 基本区别','med'],
+      ['LAG / LEAD 做前后行对比','med'],
+      ['PARTITION BY + ORDER BY 的作用','hot'],
+    ]},
+  ]},
+  {id:'python',color:'c3',icon:'🐍',title:'Python',groups:[
+    {label:'基础语法',items:[
+      ['变量、数据类型、if / for / while','hot'],
+      ['函数、参数、返回值、默认参数','hot'],
+      ['List / Dict / Set 常用操作','hot'],
+      ['列表推导式与字典推导式','med'],
+      ['字符串格式化 f-string','med'],
+    ]},
+    {label:'文件与异常',items:[
+      ['用 pathlib 处理路径','med'],
+      ['with open 读写文本文件','hot'],
+      ['读写 JSON 与 CSV','hot'],
+      ['try / except 捕获具体异常','hot'],
+      ['能看懂 traceback','hot'],
+    ]},
+    {label:'代码组织',items:[
+      ['把重复逻辑拆成函数','hot'],
+      ['使用 main() 和 if __name__ == "__main__"','med'],
+      ['了解 class / dataclass 基础','med'],
+      ['用 logging 替代大量 print',''],
+    ]},
+  ]},
+  {id:'pandas',color:'c4',icon:'📊',title:'Pandas & 数据处理',groups:[
+    {label:'DataFrame 基础',items:[
+      ['read_csv / read_json / read_parquet','hot'],
+      ['head / info / describe / shape / dtypes','hot'],
+      ['选择列、过滤行、loc / iloc','hot'],
+      ['rename / drop / sort_values','med'],
+    ]},
+    {label:'清洗转换',items:[
+      ['缺失值：isna / fillna / dropna','hot'],
+      ['类型转换：astype / to_datetime / to_numeric','hot'],
+      ['去重：drop_duplicates','hot'],
+      ['新增列与条件列 np.where','med'],
+      ['避免无脑 apply(axis=1)','med'],
+    ]},
+    {label:'聚合连接',items:[
+      ['groupby + agg 做汇总','hot'],
+      ['merge 做维表 Join','hot'],
+      ['concat 纵向合并文件','med'],
+      ['检查 Join 前后行数是否异常','hot'],
+    ]},
+  ]},
+  {id:'modeling',color:'c5',icon:'🏗️',title:'数据仓库基础',groups:[
+    {label:'表与分层',items:[
+      ['事实表 vs 维度表','hot'],
+      ['主键、外键、业务键、代理键','hot'],
+      ['ODS / DWD / DWS / ADS 分层思想','med'],
+      ['raw / staging / marts 的基本区别','med'],
+    ]},
+    {label:'建模入门',items:[
+      ['星型模型：fact + dimensions','hot'],
+      ['粒度 grain 的含义','hot'],
+      ['指标口径：GMV、订单数、活跃用户','hot'],
+      ['SCD Type 1 / Type 2 基本概念','med'],
+    ]},
+    {label:'数据理解',items:[
+      ['能写清楚一张表每列含义','hot'],
+      ['知道分区列通常选日期','med'],
+      ['理解重复数据、迟到数据、脏数据','hot'],
+    ]},
+  ]},
+  {id:'pipeline',color:'c6',icon:'🔄',title:'Pipeline & 调度',groups:[
+    {label:'ETL / ELT',items:[
+      ['Extract / Transform / Load 每步职责','hot'],
+      ['ETL 和 ELT 的区别','hot'],
+      ['全量加载 vs 增量加载','hot'],
+      ['幂等性：重复跑不会重复写脏数据','hot'],
+      ['backfill 的含义和风险','med'],
+    ]},
+    {label:'Airflow / 调度',items:[
+      ['DAG / Task / Operator 基础概念','hot'],
+      ['schedule interval 与 start_date','med'],
+      ['retry、timeout、失败告警','hot'],
+      ['任务依赖 upstream / downstream','hot'],
+      ['XCom 只传小数据，不传大 DataFrame','med'],
+    ]},
+    {label:'dbt 入门',items:[
+      ['model、source、ref() 的作用','med'],
+      ['dbt test：not_null / unique / relationships','med'],
+      ['incremental model 的基本含义',''],
+    ]},
+  ]},
+  {id:'cloud',color:'c7',icon:'☁️',title:'Cloud & 工具',groups:[
+    {label:'GCP / 云基础',items:[
+      ['Cloud Storage bucket / object 概念','hot'],
+      ['BigQuery dataset / table / job 概念','hot'],
+      ['用 SQL 查询 BigQuery 表','hot'],
+      ['了解 IAM、service account、最小权限','med'],
+      ['知道 dev / staging / prod 环境隔离','med'],
+    ]},
+    {label:'Linux / Shell',items:[
+      ['pwd / ls / cd / cp / mv / mkdir','hot'],
+      ['cat / head / tail / wc','hot'],
+      ['grep / find 基础用法','med'],
+      ['环境变量 PATH / GOOGLE_APPLICATION_CREDENTIALS','med'],
+    ]},
+    {label:'Git / Docker',items:[
+      ['git status / diff / add / commit','hot'],
+      ['branch / switch / pull / push 基础','hot'],
+      ['Docker image vs container','med'],
+      ['能用 docker compose 启动本地服务',''],
+    ]},
+  ]},
+  {id:'formats',color:'c1',icon:'📦',title:'存储与文件格式',groups:[
+    {label:'常见格式',items:[
+      ['CSV 优缺点：简单但无 schema','hot'],
+      ['JSON 适合 API 与半结构化数据','hot'],
+      ['Parquet 是列式格式，适合分析查询','hot'],
+      ['压缩格式 gzip / snappy 基本认识','med'],
+    ]},
+    {label:'数据湖入门',items:[
+      ['分区目录 dt=2026-01-01 的含义','hot'],
+      ['小文件问题的基本影响','med'],
+      ['schema evolution 是什么','med'],
+      ['Delta / Iceberg / Hudi 先知道用途',''],
+    ]},
+    {label:'数据库连接',items:[
+      ['JDBC / ODBC / SQLAlchemy 基本概念','med'],
+      ['连接字符串、用户名、密码不能硬编码','hot'],
+      ['批量写入比逐行写入更可靠','med'],
+    ]},
+  ]},
+  {id:'quality',color:'c2',icon:'✅',title:'数据质量 & 测试',groups:[
+    {label:'数据质量检查',items:[
+      ['行数检查：源表和目标表数量对比','hot'],
+      ['空值检查：关键字段 not null','hot'],
+      ['唯一性检查：主键不重复','hot'],
+      ['范围检查：金额、日期、状态枚举合法','hot'],
+      ['新旧口径对账 reconciliation','med'],
+    ]},
+    {label:'代码测试',items:[
+      ['pytest 基础 assert','hot'],
+      ['为 transform 函数写单元测试','hot'],
+      ['用小样本数据覆盖边界情况','hot'],
+      ['区分单元测试和集成测试','med'],
+    ]},
+    {label:'可观测性',items:[
+      ['日志记录输入行数、输出行数、耗时','hot'],
+      ['失败时保留错误信息和上下文','hot'],
+      ['知道 SLA / freshness 的基本含义','med'],
+    ]},
+  ]},
+  {id:'spark',color:'c3',icon:'⚡',title:'Spark 入门',groups:[
+    {label:'基础概念',items:[
+      ['Spark 适合处理超过单机内存的大数据','hot'],
+      ['Driver / Executor / Task 基本角色','med'],
+      ['DataFrame API 与 Spark SQL','hot'],
+      ['Transformation vs Action','hot'],
+    ]},
+    {label:'PySpark 常用操作',items:[
+      ['read / write parquet、csv','hot'],
+      ['select / filter / withColumn','hot'],
+      ['groupBy / agg / join','hot'],
+      ['cache 不是越多越好','med'],
+    ]},
+    {label:'常见坑',items:[
+      ['不要 collect 大表到 driver','hot'],
+      ['知道 shuffle 通常很贵','med'],
+      ['分区数和小文件会影响性能','med'],
+    ]},
+  ]},
+  {id:'portfolio',color:'c4',icon:'💼',title:'项目 & 面试表达',groups:[
+    {label:'项目能力',items:[
+      ['做过一个端到端 batch pipeline','hot'],
+      ['项目包含 README、运行命令、依赖文件','hot'],
+      ['项目有样例数据或数据生成脚本','med'],
+      ['至少有 2-3 个数据质量检查','hot'],
+      ['至少有 1-2 个单元测试','hot'],
+    ]},
+    {label:'简历表达',items:[
+      ['用动词 + 技术 + 结果描述项目','hot'],
+      ['能说清楚数据量、频率、表数量','hot'],
+      ['能说清楚自己负责的部分','hot'],
+      ['避免只写会用工具，补充解决的问题','med'],
+    ]},
+    {label:'行为面试',items:[
+      ['能讲一次 debug 数据问题的经历','hot'],
+      ['能讲一次和业务方澄清口径的经历','med'],
+      ['能讲一次学习新工具并落地的经历','med'],
+    ]},
+  ]},
+];
+
+function getState(){return JSON.parse(localStorage.getItem(storageKey)||'{}')}
+function saveState(s){localStorage.setItem(storageKey,JSON.stringify(s))}
+
+function renderSections(){
+  const grid=document.getElementById('grid');
+  const state=getState();
+  grid.innerHTML=sections.map(s=>{
+    const allItems=s.groups.flatMap(g=>g.items);
+    const checkedCount=allItems.filter(([t])=>state[s.id+'::'+t]).length;
+    const groupsHtml=s.groups.map(g=>`
+      <div class="section-label">${g.label}</div>
+      ${g.items.map(([text,tag])=>{
+        const key=s.id+'::'+text;
+        const ck=state[key]?'checked':'';
+        const tagHtml=tag==='hot'?'<span class="tag tag-hot">高频</span>':tag==='med'?'<span class="tag tag-med">重要</span>':'';
+        return `<div class="item ${ck}" data-key="${key}" onclick="toggle(this)">
+          <div class="checkbox"></div>
+          <div class="item-text">${text}${tagHtml}</div>
+        </div>`;
+      }).join('')}
+    `).join('');
+    return `<div class="card ${s.color}">
+      <div class="card-header">
+        <div class="card-icon">${s.icon}</div>
+        <div class="card-title">${s.title}</div>
+        <div class="card-count" data-section="${s.id}">${checkedCount}/${allItems.length}</div>
+      </div>
+      <div class="card-body">${groupsHtml}</div>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function toggle(el){
+  const state=getState();
+  const key=el.dataset.key;
+  if(state[key]){delete state[key];el.classList.remove('checked');}
+  else{state[key]=true;el.classList.add('checked');}
+  saveState(state);
+  updateProgress();
+  const sectionId=key.split('::')[0];
+  const s=sections.find(x=>x.id===sectionId);
+  const allItems=s.groups.flatMap(g=>g.items);
+  const done=allItems.filter(([t])=>state[sectionId+'::'+t]).length;
+  const cnt=document.querySelector(`.card-count[data-section="${sectionId}"]`);
+  if(cnt)cnt.textContent=done+'/'+allItems.length;
+}
+
+function updateProgress(){
+  const state=getState();
+  const total=sections.flatMap(s=>s.groups.flatMap(g=>g.items)).length;
+  const done=Object.keys(state).filter(k=>sections.some(s=>k.startsWith(s.id+'::'))).length;
+  document.getElementById('progressFill').style.width=(done/total*100)+'%';
+  document.getElementById('progressText').textContent=done+' / '+total+' completed';
+}
+
+function resetAll(){
+  if(confirm('确定重置 Junior DE checklist 的所有进度吗？')){
+    localStorage.removeItem(storageKey);
+    renderSections();
+  }
+}
+
+renderSections();
+</script>
+</body>
+</html>
